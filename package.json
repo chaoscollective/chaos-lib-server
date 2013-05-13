@@ -1,0 +1,11 @@
+{
+  "name": "chaos-lib-server",
+  "description": "The Chaos Collective: Rapid Prototyping library for NodeJS (on the server).",
+  "author": "The Chaos Collective <hello@chaoscollective.org>",
+  "dependencies": {
+    "underscore": ">= 1.4.x",
+    "mongodb": ">= 1.3.x",
+    "connect-mongo": ">= 0.3.2"
+  },
+  "engine": "node >= 0.10.0"
+}
