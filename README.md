@@ -1,5 +1,5 @@
 
-# The Chaos Collective Library for NodeJS
+# The Chaos Collective: NodeJS Library 
 
 Rapid Prototyping library for NodeJS (on the server).
 
