@@ -18,7 +18,7 @@ exports.getClientIp       = function(req) {
   return ipAddress;
 };
 exports.getClientIpBase36 = function(req){
-  var ip = _getClientIp(req)||"";
+  var ip = kapp.getClientIp(req)||"";
   var ipa = ip.split(".")||[];
   var a = parseInt(ip[0]||0, 10);
   var b = parseInt(ip[0]||0, 10);
@@ -27,7 +27,7 @@ exports.getClientIpBase36 = function(req){
   var num = a*256*256*256;
   num += b*256*256;
   num += c*256;
-  num += d; 
+  num += d;  
   return num.toString(36);
 };
 // --
