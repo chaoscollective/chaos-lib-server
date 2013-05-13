@@ -1,6 +1,8 @@
 
 # The Chaos Collective: NodeJS Library 
 
+![ChaosLibClient](img/banner_720x135.jpg) 
+
 Rapid Prototyping library for NodeJS (on the server).
 
 # KERNEL
