@@ -24,6 +24,7 @@ var dbCollections = {
 
 var MAX_QUERY_RESULTS                   = 100; // >= 2
 var MAX_QUERY_LOOP_COUNT                = 100;
+var ENABLE_DB_PROFILING                 = false;
 var UPDATE_DB_INDEXES_AFTER_CONNECTION  = false; // only need to do this once.
 var DB_PROFILING_PRFILE                 = 1;
 var DB_PROFILING_SLOW_MS                = 50;
@@ -46,17 +47,19 @@ dbDB.open(function(err, db) {
   db.authenticate(MONGO_USER, MONGO_PASS, function(err, dbauth){
     if(err) return logErr(err, myname+"could not authenticate with db");
     // --
-    db.command({
-      profile: DB_PROFILING_PRFILE, 
-      slowms : DB_PROFILING_SLOW_MS
-    }, function(err){
-      if(err) return logErr(myname+"Unable to setup Db profiling.");
-      if(DB_PROFILING_PRFILE > 0){
-        log2(myname+"Db profiling enabled.");
-      }else{
-        log2(myname+"profiling disabled.");
-      } 
-    });
+    if(ENABLE_DB_PROFILING){
+      db.command({
+        profile: DB_PROFILING_PRFILE, 
+        slowms : DB_PROFILING_SLOW_MS
+      }, function(err){
+        if(err) return logErr(myname+"Unable to setup Db profiling.");
+        if(DB_PROFILING_PRFILE > 0){
+          log2(myname+"Db profiling enabled.");
+        }else{
+          log2(myname+"profiling disabled.");
+        } 
+      });
+    }
     // --
     var total = _.size(dbCollections);
     var sofar = 0;
