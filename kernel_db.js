@@ -6,7 +6,7 @@ var kernel_db   = exports;
 var logHelp     = require("./log.js");
 var _           = require("underscore");
 // --
-if(!settings) log9(myname+"No settings object?");
+if(!settings) return log9(myname+"No settings object?");
 // ----------------------------
 // IMPORTANT APP-SPECIFIC VARS.
 var MONGO_HOST    = settings.mongo_host   || "127.0.0.1";
@@ -21,14 +21,12 @@ var dbCollections = {
   Projects: null
 };
 // ----------------------------
-
 var MAX_QUERY_RESULTS                   = 100; // >= 2
 var MAX_QUERY_LOOP_COUNT                = 100;
 var ENABLE_DB_PROFILING                 = false;
 var UPDATE_DB_INDEXES_AFTER_CONNECTION  = false; // only need to do this once.
 var DB_PROFILING_PRFILE                 = 1;
 var DB_PROFILING_SLOW_MS                = 50;
-
 // -- MongoDB!
 var mongo         = require("mongodb");
 var Db            = mongo.Db;
@@ -96,32 +94,10 @@ function queryDB(dbObj, query, fields, skip, limit, orderby, callback){
     if(err){
       return callback("query failed.");
     }
-    // cursor.count(function(err,count){
-    //   console.log("err?", err);
-    //   console.log("count?", count);
-    // }); 
     cursor.toArray(function(err, docs) {
       return callback(err, docs);
     });
   });
-}
-function queryDBAndIterate(dbObj, query, fields, skip, limit, orderby, callback){
-  var loopCount = 0;
-  limit = limit||0;
-  skip  = skip ||0;
-  function fetch(){ 
-    if(limit && skip >= limit) return callback(null, null);
-    queryDB(dbObj, query, fields, skip, 2, orderby, function(err, docs){ 
-      if(err || !docs) return logErrCB(err, cb);
-      skip++;
-      if(docs.length > 0){
-        callback(null, docs[0], fetch);
-      }else{
-        callback(null, null);
-      }
-    });
-  }
-  fetch();
 }
 function countDB(dbObj, query, callback){ 
   dbObj.count(query, function (err, info) {
@@ -131,24 +107,42 @@ function countDB(dbObj, query, callback){
     return callback(null, info);
   });
 } 
-function distinctDB(dbObj, distinct, query, sortby, sortdir, maxormin, skip, limit, callback){ 
-  limit = Math.max(0, Math.min(limit, MAX_QUERY_RESULTS));
-  var grp = {_id: "$"+distinct};
-  grp["max_"+sortby] = {$max: "$"+sortby};
-  grp["min_"+sortby] = {$min: "$"+sortby};
-  var srt = {};
-  srt[maxormin+"_"+sortby] = sortdir;
-  dbObj.aggregate([
-    {$match: query},
-    {$group : grp},
-    {$sort: srt},
-    {$skip: skip},
-    {$limit: limit}
-  ], function(err, result) {
-    if(err) logErr(err, "db aggregation error");
-    callback(err, result);
-  });
-}
+// function queryDBAndIterate(dbObj, query, fields, skip, limit, orderby, callback){
+//   var loopCount = 0;
+//   limit = limit||0;
+//   skip  = skip ||0;
+//   function fetch(){ 
+//     if(limit && skip >= limit) return callback(null, null);
+//     queryDB(dbObj, query, fields, skip, 2, orderby, function(err, docs){ 
+//       if(err || !docs) return logErrCB(err, cb);
+//       skip++;
+//       if(docs.length > 0){
+//         callback(null, docs[0], fetch);
+//       }else{
+//         callback(null, null);
+//       }
+//     });
+//   }
+//   fetch();
+// }
+// function distinctDB(dbObj, distinct, query, sortby, sortdir, maxormin, skip, limit, callback){ 
+//   limit = Math.max(0, Math.min(limit, MAX_QUERY_RESULTS));
+//   var grp = {_id: "$"+distinct};
+//   grp["max_"+sortby] = {$max: "$"+sortby};
+//   grp["min_"+sortby] = {$min: "$"+sortby};
+//   var srt = {};
+//   srt[maxormin+"_"+sortby] = sortdir;
+//   dbObj.aggregate([
+//     {$match: query},
+//     {$group : grp},
+//     {$sort: srt},
+//     {$skip: skip},
+//     {$limit: limit}
+//   ], function(err, result) {
+//     if(err) logErr(err, "db aggregation error");
+//     callback(err, result);
+//   });
+// }
 // ----------------------------
 // Common names + app-specific
 // ----------------------------
