@@ -1,4 +1,4 @@
-var myname      = "project_db: ";
+var myname      = "db: ";
 // --   
 module.exports = function(settings, port, dbCollections){
 var exports     = {};
@@ -86,7 +86,7 @@ exports.ready = function(cb){
   if(dbReady) return cb();
 };
 // --
-exports.queryDB           = function(dbObj, query, fields, skip, limit, orderby, callback){ 
+exports.query           = function(dbObj, query, fields, skip, limit, orderby, callback){ 
   limit   = Math.max(0, Math.min(limit, MAX_QUERY_RESULTS));
   orderby = orderby||{_id: -1}; 
   var q2  = {$query: query, $orderby: orderby};
@@ -102,14 +102,15 @@ exports.queryDB           = function(dbObj, query, fields, skip, limit, orderby,
       return callback(err, docs);
     });
   });
-}
-exports.queryDBAndIterate = function(dbObj, query, fields, skip, limit, orderby, callback){
+};
+exports.queryAndIterate = function(dbObj, query, fields, skip, limit, orderby, callback){
+  if(!dbReady) return logErrCB(myname+"Not ready.", cb);
   var loopCount = 0;
   limit = limit||0;
   skip  = skip ||0;
   function fetch(){ 
     if(limit && skip >= limit) return callback(null, null);
-    queryDB(dbObj, query, fields, skip, 2, orderby, function(err, docs){ 
+    query(dbObj, query, fields, skip, 2, orderby, function(err, docs){ 
       if(err || !docs) return logErrCB(err, cb);
       skip++;
       if(docs.length > 0){
@@ -120,16 +121,18 @@ exports.queryDBAndIterate = function(dbObj, query, fields, skip, limit, orderby,
     });
   }
   fetch();
-}
-exports.countDB           = function(dbObj, query, callback){ 
+};
+exports.count           = function(dbObj, query, callback){
+  if(!dbReady) return logErrCB(myname+"Not ready.", cb);
   dbObj.count(query, function (err, info) {
     if(err){
       return callback("count failed.");
     }
     return callback(null, info);
   });
-} 
-exports.distinctDB        = function(dbObj, distinct, query, sortby, sortdir, maxormin, skip, limit, callback){ 
+};
+exports.distinct        = function(dbObj, distinct, query, sortby, sortdir, maxormin, skip, limit, callback){ 
+  if(!dbReady) return logErrCB(myname+"Not ready.", cb);
   limit = Math.max(0, Math.min(limit, MAX_QUERY_RESULTS));
   var grp = {_id: "$"+distinct};
   grp["max_"+sortby] = {$max: "$"+sortby};
@@ -146,8 +149,9 @@ exports.distinctDB        = function(dbObj, distinct, query, sortby, sortdir, ma
     if(err) logErr(err, "db aggregation error");
     callback(err, result);
   });
-}
-exports.findByID          = function(dbObj, id, cb){
+};
+exports.findByID        = function(dbObj, id, cb){
+  if(!dbReady) return logErrCB(myname+"Not ready.", cb);
   var idStr = id+"";
   if(idStr && idStr.length === 24){
     try{
@@ -159,7 +163,7 @@ exports.findByID          = function(dbObj, id, cb){
     }
   }
   dbObj.findOne({_id: id}, {}, cb);
-}
+};
 // --
 return exports;
 };
