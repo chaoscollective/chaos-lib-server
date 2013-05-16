@@ -4,7 +4,7 @@ var myname      = "db: ";
 // --   
 module.exports = function(settings, port, dbCollections){
 var exports     = {};
-var kernel_db   = exports;
+var db          = exports;
 var logHelp     = require("./log.js");
 var _           = require("underscore");
 // --
@@ -19,6 +19,7 @@ var MONGO_USER    = settings.mongo_user   || "ProjUser";
 var MONGO_PASS    = settings.mongo_pass   || "Password1234";
 var MONGO_DBNAME  = settings.mongo_dbname || "Project"; 
 // --
+if(port === "NO_PORT") port = "";
 MONGO_USER    += port;
 MONGO_PASS    += port;
 MONGO_DBNAME  += port;
@@ -70,7 +71,7 @@ dbDB.open(function(err, db) {
         //console.log(myname+"opened db collection: "+key);
         sofar++;
         if(sofar === total){
-          console.log(myname+"all collections ready.");
+          //console.log(myname+"all collections ready.");
           if(UPDATE_DB_INDEXES_AFTER_CONNECTION){
             createDBObjectIndexes();
           }
@@ -87,6 +88,18 @@ exports.ready = function(cb){
   dbReadyCb = cb;
   if(dbReady) return cb();
 };
+// --
+function createDBObjectIndexes(){
+  console.log(myname+"ensuring db index...");
+  // dbCollections.SessionEvents.ensureIndex('_session', {safe:true}, function(err, indexName) {
+  //  if(err) logErr(err, myname+"unable to update object index.");
+  //  log1(myname+"(+) index "+indexName);
+  // }); 
+  // dbCollections.SessionInfo.ensureIndex('_urlname', {safe:true}, function(err, indexName) {
+  //  if(err) logErr(err, myname+"unable to update object index.");
+  //  log1(myname+"(+) index "+indexName);
+  // }); 
+}
 // --
 exports.query           = function(dbObj, query, fields, skip, limit, orderby, callback){ 
   limit   = Math.max(0, Math.min(limit, MAX_QUERY_RESULTS));
@@ -154,6 +167,21 @@ exports.distinct        = function(dbObj, distinct, query, sortby, sortdir, maxo
 };
 exports.findByID        = function(dbObj, id, cb){
   if(!dbReady) return logErrCB(myname+"Not ready.", cb);
+  db.id = db.asMongoObjectID(id);
+  // var idStr = id+"";
+  // if(idStr && idStr.length === 24){
+  //   try{
+  //     var mID = mongo.ObjectID(idStr);
+  //     id = mID;
+  //   }catch(ex){
+  //     console.log("looks like mongoID, but couldn't parse it.");
+  //     console.log(ex);
+  //   }
+  // }
+  dbObj.findOne({_id: id}, {}, cb);
+};
+// --
+exports.asMongoObjectID = function(id){
   var idStr = id+"";
   if(idStr && idStr.length === 24){
     try{
@@ -164,7 +192,7 @@ exports.findByID        = function(dbObj, id, cb){
       console.log(ex);
     }
   }
-  dbObj.findOne({_id: id}, {}, cb);
+  return id;
 };
 // --
 return exports;
