@@ -20,13 +20,13 @@ exports.getClientIp       = function(req) {
 exports.getClientIpBase36 = function(req){
   var ip = kapp.getClientIp(req)||"";
   var ipa = ip.split(".")||[];
-  var a = parseInt(ip[0]||0, 10);
-  var b = parseInt(ip[0]||0, 10);
-  var c = parseInt(ip[0]||0, 10);
-  var d = parseInt(ip[0]||0, 10);
+  var a = parseInt(ipa[0]||0, 10);
+  var b = parseInt(ipa[1]||0, 10);
+  var c = parseInt(ipa[2]||0, 10);
+  var d = parseInt(ipa[3]||0, 10);
   var num = a*256*256*256;
   num += b*256*256;
-  num += c*256;
+  num += c*256; 
   num += d;  
   return num.toString(36);
 };
