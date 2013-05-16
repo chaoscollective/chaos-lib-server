@@ -33,8 +33,11 @@ module.exports = function(settings){
           cwd: __dirname, 
         }, 
         function (error, stdout, stderr) {
-          if(error) return console.log(myname+'exec error: '+error);
-          console.log(myname+"optimized, "+name+".js --> "+name+"_opt.js");
+          if(error){
+            if(updates === 0) console.log(myname+'exec error: '+error);
+            return;
+          }
+          if(updates === 0) console.log(myname+"optimized, "+name+".js --> "+name+"_opt.js");
           // add autoUpdater? :)
           if(updates === 0 && autoUpdate){
             var fname = absMainJSDir+'/'+name+".js";
