@@ -1,3 +1,5 @@
+// Database gateway (db)
+// built for use by multiple projects, each with their own db.
 var myname      = "db: ";
 // --   
 module.exports = function(settings, port, dbCollections){

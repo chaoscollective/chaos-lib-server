@@ -1,21 +1,27 @@
-
-LOG_LEVEL = 0;
-
+// HTML logger (log)
+// color coded messages for printing html in the console.
+var myname = "log: ";
+// --
 console._log = console.log;
 console._getErrorObject = function(){
     try { throw Error(''); } catch(err) { return err; }
 };
-console.log = function(o, o2, o3, o4, o5){
+console.log = function(o, o2, o3, o4, o5, o6, o7){
   if(o2){
+    // if more than one argument, don't fancy print.
     if(!o3) return console._log(o, o2);
     if(!o4) return console._log(o, o2, o3);
     if(!o5) return console._log(o, o2, o3, o4);
-    return console._log(o, o2, o3, o4, o5);
+    if(!o6) return console._log(o, o2, o3, o4, o5);
+    if(!o7) return console._log(o, o2, o3, o4, o5, o6);
+    return console._log(o, o2, o3, o4, o5, o5, o6, o7);
   }
   if(typeof(o) !== 'string'){ 
+    // if not a string, prepend with line info, but don't fancy print.
     logH("(see next line)", "#777");
     console._log(o);
   }else{
+    // fancy print!
     logH(o.replace(/\n/g, "<br/>"), "#777");
   }
 };
@@ -65,7 +71,7 @@ logErr = function(err, msg){
   logH(msg+" (details below)", "#F00");
   console._log(err);
 };
-
+// --
 logMem = function(){
   var mu = process.memoryUsage();
   var m = mu.heapTotal;
@@ -85,7 +91,7 @@ logTime = function(key){
   }
   lastTimes[key] = t;
 };
-
+// --
 logErrCB = function(msg, cb){
   logH(msg, "#FF0");
   if(cb){

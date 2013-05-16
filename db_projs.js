@@ -1,4 +1,6 @@
-var myname      = "kernel_db: ";
+// Database gateway for Project meta info 
+// this handles cross-project storage for high-level state (projects, users, sessions)
+var myname      = "db_projs: ";
 // --   
 module.exports = function(settings){
 var exports     = {};

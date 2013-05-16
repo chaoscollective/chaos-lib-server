@@ -1,4 +1,6 @@
-var myname      = "kernel_sessions: ";
+// SessionStore (sessionStore)
+// cross-project session storage to remember users and their associated preferences/info.
+var myname      = "sessionStore: ";
 // --
 var connectMongo = require('connect-mongo');
 // --

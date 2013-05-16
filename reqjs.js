@@ -1,12 +1,11 @@
+// RequireJS tools (reqjs)
+// makes optimizations and auto-updating of modular code simple.
 var myname = "reqjs: ";
 // --
 var requirejs = require("requirejs");
 var fs        = require("fs");
 var exec      = require('child_process').exec;
 // --
- 
-// node r.js -o baseUrl=./public/_lib/jsmods  paths.main=/root/tmp/ChaosTemplate2/public/js/main name=main out=main-built.js
-
 module.exports = function(settings){
   var exports   = {};
   var reqjs_opt = exports;

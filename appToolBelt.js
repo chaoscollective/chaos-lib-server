@@ -1,10 +1,12 @@
-var myname      = "kernel_app: ";
+// appToolBelt (atb)
+// handy little functions to make get an app on its feet easier/faster.
+var myname      = "atb: "; 
 // -- 
 var logHelp     = require("./log.js");
 // --
 module.exports = function(settings){
 var exports = {};
-var kapp    = exports;
+var atb    = exports;
 // --
 exports.getClientIp       = function(req) {
   var ipAddress;
@@ -18,7 +20,7 @@ exports.getClientIp       = function(req) {
   return ipAddress;
 };
 exports.getClientIpBase36 = function(req){
-  var ip = kapp.getClientIp(req)||"";
+  var ip = atb.getClientIp(req)||"";
   var ipa = ip.split(".")||[];
   var a = parseInt(ipa[0]||0, 10);
   var b = parseInt(ipa[1]||0, 10);
