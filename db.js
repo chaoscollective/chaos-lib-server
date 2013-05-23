@@ -167,7 +167,7 @@ exports.distinct        = function(dbObj, distinct, query, sortby, sortdir, maxo
 };
 exports.findByID        = function(dbObj, id, cb){
   if(!dbReady) return logErrCB(myname+"Not ready.", cb);
-  db.id = db.asMongoObjectID(id);
+  id = db.asMongoObjectID(id); 
   // var idStr = id+"";
   // if(idStr && idStr.length === 24){
   //   try{
