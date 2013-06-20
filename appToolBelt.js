@@ -8,6 +8,9 @@ module.exports = function(settings){
 var exports = {};
 var atb    = exports;
 // --
+exports.express     = require("express");
+exports.underscore  = require("underscore");
+// --
 exports.getClientIp       = function(req) {
   var ipAddress;
   var forwardedIpsStr = req.header('x-forwarded-for'); 
