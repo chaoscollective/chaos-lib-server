@@ -101,6 +101,11 @@ module.exports = function(options){
         session = session || {};
         conn.session    = session;
         conn.sessionID  = obj.sid;
+        // -- update conn.id
+        delete connections[conn.id];
+        conn.id = (conn.sessionID||conn.id).replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
+        connections[conn.id] = conn;
+        // --
         cb(null);
         rtp.onconnsyncd(conn);
       });
@@ -125,6 +130,7 @@ module.exports = function(options){
   }}); 
   rtpipeServer.on('connection', function(conn) {
     // new connection.
+    conn.id = conn.id.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
     connections[conn.id] = conn;
     conn.clientFn = function(fnName, args, cb){
       var nextcbID = 0;

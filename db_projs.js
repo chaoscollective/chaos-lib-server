@@ -22,7 +22,7 @@ db.ready(function(){
 // ----------------------------
 // app-specific. 
 // ---------------------------- 
-var _safeFieldsToReturn = {_id:1, desc:1, _ct:1, stage:1, pts:1, port:1};
+var _safeFieldsToReturn = {_id:1, desc:1, _ct:1, stage:1, pts:1, port:1, link:1};
 // --
 exports.add                 = function(desc, cb){
   if(!dbReady)  return logErrCB(myname+"not ready yet.", cb);
@@ -71,6 +71,20 @@ exports.updateDesc          = function(projID, desc, cb){
   db_projs.getByID(projID, function(err, pInfo){
     if(err) return logErrCB(err,cb);
     dbObj.update({_id: db.asMongoObjectID(projID)}, {$set: {"desc": desc, "_mt": now}}, {safe:true}, function(err, res){
+      if(err) return logErrCB(err, cb);
+      db_projs.getByID(projID, cb);
+    });
+  });
+};
+exports.updateLink          = function(projID, link, cb){
+  if(!dbReady)    return logErrCB(myname+"not ready yet.", cb);
+  // --
+  var dbObj = dbc.Projects;
+  var now = new Date().getTime();
+  // --  
+  db_projs.getByID(projID, function(err, pInfo){
+    if(err) return logErrCB(err,cb);
+    dbObj.update({_id: db.asMongoObjectID(projID)}, {$set: {"link": link||"", "_mt": now}}, {safe:true}, function(err, res){
       if(err) return logErrCB(err, cb);
       db_projs.getByID(projID, cb);
     });
@@ -163,6 +177,17 @@ exports.getArchivedRecently = function(recentToGet, cb){
   var dbObj = dbc.Projects;
   // --  
   db.query(dbObj, {stage: "archived"}, _safeFieldsToReturn, 0, recentToGet, {_mt: -1}, function(err, docs){
+    if(err) return logErrCB(err, cb);
+    // --
+    return cb(null, docs);
+  });
+};
+exports.getStatic           = function(recentToGet, cb){
+  if(!dbReady)    return logErrCB(myname+"not ready yet.", cb);
+  // --
+  var dbObj = dbc.Projects;
+  // --  
+  db.query(dbObj, {stage: "static"}, _safeFieldsToReturn, 0, recentToGet, {_mt: -1}, function(err, docs){
     if(err) return logErrCB(err, cb);
     // --
     return cb(null, docs);
@@ -320,6 +345,28 @@ exports.updateStageToUnarchived   = function(projID, cb){
     });
   });
 };
+exports.updateStageToStatic       = function(projID, cb){
+  if(!dbReady)  return logErrCB(myname+"not ready yet.", cb);
+  if(!projID)   return cb(myname+"no projID.");
+  // --
+  var dbObj = dbc.Projects;
+  var now   = new Date().getTime();
+  projID    = projID+"";
+  // --  
+  db_projs.getByID(projID, function(err, pInfo){
+    if(err) return logErrCB(err,cb);
+    if(pInfo.stage !== "proposed")    return logErrCB("Wrong initial stage.", cb);
+    db_projs.getHighestUsedPort(function(err, port){
+      if(err) return logErrCB(err,cb);
+      var nextPort = port+1;
+      dbObj.update({_id: db.asMongoObjectID(projID)}, {$set: {stage: "static", port: nextPort, "_mt": now}}, {safe:true}, function(err, res){
+        if(err) return logErrCB(err, cb);
+        log3("Project migrated to: static");
+        db_projs.getByID(projID, cb);
+      });
+    });
+  });
+};
 exports.updateStage               = function(projID, stage, cb){
   if(!dbReady)    return logErrCB(myname+"not ready yet.", cb);
   if(!projID) return cb(myname+"no projID.");
@@ -330,7 +377,7 @@ exports.updateStage               = function(projID, stage, cb){
   projID    = projID+"";
   stage     = stage+"";
   if(stage !== "proposed" && stage !== "developing" &&
-     stage !== "active" && stage !== "archived"){
+     stage !== "active" && stage !== "archived" && stage !== "static"){
        return logErrCB("Invalid stage: "+stage, cb);
      }
   // --  

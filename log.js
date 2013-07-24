@@ -67,10 +67,12 @@ function logH(msg, color){
   var details = {mtime: date.getTime(), type: typeof(msg), from: clean};
   console._log("<span style='color: "+color+";'>"+msg+"</span> <span class='details' title='"+clean+"'>&gt;</span>");
 }
-logErr = function(err, msg){
-  logH(msg+" (details below)", "#F00");
-  console._log(err);
-};
+logWarn = log8;
+logErr  = log9;
+// logErr = function(err, msg){
+//   logH(msg+" (details below)", "#F00");
+//   console._log(err);
+// };
 // --
 logMem = function(){
   var mu = process.memoryUsage();
@@ -93,7 +95,7 @@ logTime = function(key){
 };
 // --
 logErrCB = function(msg, cb){
-  logH(msg, "#FF0");
+  logH(msg, "#F90");
   if(cb){
     return cb(msg);
   }else{
