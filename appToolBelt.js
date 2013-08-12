@@ -35,6 +35,9 @@ exports.getClientIpBase36 = function(req){
   num += d;  
   return num.toString(36);
 };
+exports.escapeHTML     = function(msg){
+  return (msg||"").replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/\>/g, "&gt;");
+};
 // --
 return exports;
 };
