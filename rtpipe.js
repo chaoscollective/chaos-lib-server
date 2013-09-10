@@ -62,7 +62,7 @@ module.exports = function(options){
     });
   }
   // --
-  serverFn._echo = function(err, conn, args, cb){
+  serverFn._echo                = function(err, conn, args, cb){
     console.log("[1/3] echoing! (start of 3 phase)");
     //console.log("session.user:");
     //console.log(conn.session.user);
@@ -111,10 +111,10 @@ module.exports = function(options){
       });
     });
   };
-  serverFn._getTime        = function(err, conn, args, cb){
+  serverFn._getTime             = function(err, conn, args, cb){
     if(cb) cb(new Date().getTime());
   };
-  serverFn.__cb = function(err, conn, args, cb, cbID){
+  serverFn.__cb                 = function(err, conn, args, cb, cbID){
     var _cb = cbs[cbID];
     if(_cb){
       _cb(err, conn, args, cb);

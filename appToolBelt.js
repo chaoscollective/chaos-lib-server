@@ -11,7 +11,7 @@ var atb    = exports;
 exports.express     = require("express");
 exports.underscore  = require("underscore");
 // --
-exports.getClientIp       = function(req) {
+exports.getClientIp       = function(req){
   var ipAddress;
   var forwardedIpsStr = req.header('x-forwarded-for'); 
   if(forwardedIpsStr){
@@ -35,8 +35,19 @@ exports.getClientIpBase36 = function(req){
   num += d;  
   return num.toString(36);
 };
-exports.escapeHTML     = function(msg){
+exports.escapeHTML        = function(msg){
   return (msg||"").replace(/\&/g, "&amp;").replace(/</g, "&lt;").replace(/\>/g, "&gt;");
+};
+// --
+exports.enableHighAvailability = function(http){
+  log3("Enabling (posix) high availibility -> go go go!");
+  var posix   = require('posix');
+  var limits  = posix.getrlimit('nofile');
+  log('* Default limits: soft=' + limits.soft + ', hard=' + limits.hard); 
+  posix.setrlimit('nofile', { soft: 16384, hard: 32768 });
+  var limitsNow = posix.getrlimit('nofile');
+  log('* --> New limits: soft=' + limitsNow.soft + ', hard=' + limitsNow.hard);
+  http.globalAgent.maxSockets = limitsNow.soft;
 };
 // --
 return exports;
