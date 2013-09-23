@@ -33,7 +33,11 @@ module.exports = function(settings){
         }, 
         function (error, stdout, stderr) {
           if(error){
-            if(updates === 0) console.log(myname+'exec error: '+error);
+            if(updates === 0){
+              console.log(myname+'exec error: ');
+              console.log(stdout);
+              console.log(error);
+            } 
             return;
           }
           if(updates === 0) console.log(myname+"optimized, "+name+".js --> "+name+"_opt.js");
