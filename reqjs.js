@@ -22,8 +22,8 @@ module.exports = function(settings){
     rConfig += 'out='+absMainJSDir+'/'+name+'_opt.js';
     //console.log(pathToR+' '+rConfig);
     var updates = 0;
-    function doOptimization(){
-      exec('node '+pathToR+' '+rConfig, { 
+    function doOptimization(){ 
+      exec('/usr/bin/nice -n 10 /usr/local/bin/node '+pathToR+' '+rConfig, { 
           encoding:   'utf8', 
           timeout:    30000, 
           maxBuffer:  200*1024, 
