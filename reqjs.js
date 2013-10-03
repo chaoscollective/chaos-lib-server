@@ -15,11 +15,12 @@ module.exports = function(settings){
   var baseUrl = settings.baseUrl || "/NETFS/ChaosLibClient/jsmods";
   // --
   var pathToR = __dirname+"/node_modules/requirejs/bin/r.js";
-  exports.optimize = function(name, absMainJSDir, autoUpdate){
+  exports.optimize = function(name, absMainJSDir, autoUpdate, absOutFile){
     var rConfig = '-o baseUrl='+baseUrl+' ';
     rConfig += 'paths.'+name+'='+absMainJSDir+'/'+name+' ';
     rConfig += 'name='+name+' '; 
-    rConfig += 'out='+absMainJSDir+'/'+name+'_opt.js';
+    var outpath = absOutFile||(absMainJSDir+'/'+name+'_opt.js');
+    rConfig += 'out='+outpath;
     //console.log(pathToR+' '+rConfig);
     var updates = 0;
     function doOptimization(){ 
