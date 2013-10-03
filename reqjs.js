@@ -40,8 +40,8 @@ module.exports = function(settings){
               console.log(error);
             } 
             return;
-          }
-          if(updates === 0) console.log(myname+"optimized, "+name+".js --> "+name+"_opt.js");
+          } 
+          if(updates === 0) console.log(myname+"optimized, "+name+".js --> "+outpath);
           // add autoUpdater? :)
           if(updates === 0 && autoUpdate){
             var fname = absMainJSDir+'/'+name+".js";
