@@ -11,23 +11,26 @@ exports.addFile = function(absLessFile, absCSSFile, autoUpdate, options){
     var t0 = new Date().getTime();
     fs.readFile(absLessFile, function(err, data){
       if(err) return console.log(err);
-      //console.log(myname+"processing...");
       // --
-      var dataString = (data||"").toString();
-      // --
-      var parser = new less.Parser(options);
-      parser.parse(dataString, function(err, cssTree){
-        if(err) return less.writeError(err, options);
-        // Create the CSS from the cssTree
-        var cssString = cssTree.toCSS({
-          compress   : options.compress,
-          yuicompress: options.yuicompress
+      try{
+        var dataString = (data||"").toString();
+        var parser = new less.Parser(options);
+        parser.parse(dataString, function(err, cssTree){
+          if(err) return less.writeError(err, options);
+          // Create the CSS from the cssTree
+          var cssString = cssTree.toCSS({
+            compress   : options.compress,
+            yuicompress: options.yuicompress
+          });
+          // Write output
+          fs.writeFileSync(absCSSFile, cssString, 'utf8');
+          var t1 = new Date().getTime() - t0;
+          console.log(myname+"created css in "+t1+"ms"); 
         });
-        // Write output
-        fs.writeFileSync(absCSSFile, cssString, 'utf8');
-        var t1 = new Date().getTime() - t0;
-        console.log(myname+"created css in "+t1+"ms"); 
-      });
+      }catch(ex){
+        console.log(myname+"error in parsing");
+        console.log(ex);
+      } 
       if(updates === 0 && autoUpdate){
         console.log(myname+"adding autoUpdate.");
         fs.watchFile(absLessFile, {interval: options.autoMS||5007}, function (curr, prev) {
