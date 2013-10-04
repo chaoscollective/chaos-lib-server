@@ -8,7 +8,7 @@ var fs        = require("fs");
 exports.addFile = function(absLessFile, absCSSFile, autoUpdate, options){
   var updates = 0;
   function doOptimization(){
-    fs.readFile(absLessDir+"/"+lessFilename, function(err, data){
+    fs.readFile(absLessFile, function(err, data){
       if(err) return console.log(err);
       console.log(myname+"processing...");
       // --
@@ -31,7 +31,7 @@ exports.addFile = function(absLessFile, absCSSFile, autoUpdate, options){
         fs.watchFile(absLessFile, function (curr, prev) {
           if(prev.size.toString() !== curr.size.toString()){
             doOptimization();
-          }
+          } 
         });
       }
       updates++;
