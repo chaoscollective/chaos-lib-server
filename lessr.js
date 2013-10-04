@@ -8,6 +8,7 @@ var fs      = require("fs");
 exports.addFile = function(absLessFile, absCSSFile, autoUpdate, options){
   var updates = 0;
   function doOptimization(){
+    var t0 = new Date().getTime();
     fs.readFile(absLessFile, function(err, data){
       if(err) return console.log(err);
       console.log(myname+"processing...");
@@ -24,11 +25,12 @@ exports.addFile = function(absLessFile, absCSSFile, autoUpdate, options){
         });
         // Write output
         fs.writeFileSync(absCSSFile, cssString, 'utf8');
-        console.log(myname+"Conversion complete.");
+        var t1 = new Date().getTime() - t0;
+        console.log(myname+"Conversion complete in "+t1+"ms"); 
       });
       if(updates === 0 && autoUpdate){
-        console.log(myname+"adding autoUpdate."); 
-        fs.watchFile(absLessFile, function (curr, prev) {
+        console.log(myname+"adding autoUpdate.");
+        fs.watchFile(absLessFile, {interval: options.autoMS||5007}, function (curr, prev) {
           if(prev.size.toString() !== curr.size.toString()){
             doOptimization();
           } 
