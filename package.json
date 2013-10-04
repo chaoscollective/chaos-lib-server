@@ -9,7 +9,8 @@
     "connect-mongo": ">= 0.3.2",
     "requirejs": ">= 2.1.6",
     "sockjs": ">= 0.3.7",
-    "posix": "*"
+    "posix": "*",
+    "less": "*"
   },
   "engine": "node >= 0.10.0",
   "repository": "git://github.com/chaoscollective/chaos-lib-server"
