@@ -22,6 +22,9 @@ exports.addFile = function(absLessFile, absCSSFile, autoUpdate, options){
             compress   : options.compress,
             yuicompress: options.yuicompress
           });
+          if(!options.compress){
+            cssString = cssString.replace(/\n\ \ /g, "\n"); 
+          }
           // Write output
           fs.writeFileSync(absCSSFile, cssString, 'utf8');
           var t1 = new Date().getTime() - t0;
