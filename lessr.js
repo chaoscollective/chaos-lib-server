@@ -1,9 +1,9 @@
 // LESSr
 // makes optimizations and auto-updating of less simple.
-var myname = "lessr: ";
+var myname  = "lessr: ";
 // --
-var requirejs = require("less");
-var fs        = require("fs");
+var less    = require("less");
+var fs      = require("fs"); 
 // --
 exports.addFile = function(absLessFile, absCSSFile, autoUpdate, options){
   var updates = 0;
