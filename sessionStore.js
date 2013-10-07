@@ -40,7 +40,7 @@ module.exports = function(settings, app, express){
     console.log(myname+"ready."); 
   });
   // --
-  var sessionMiddleware = express.session({  
+  var config = {  
     key: SESSION_KEY, 
     secret: SESSION_SECRET, 
     store: sessionStore,
@@ -48,10 +48,13 @@ module.exports = function(settings, app, express){
       path     : '/',  // root path for the cookie
       httpOnly : true, // this includes https (just not browser code)
       maxAge   : 1000*60*60*24*100, //100 days between accesses
-      secure   : SESSION_SECURE 
-      //domain   : ".chaoscollective.org" // allow subdomain (maybe userful later)
     } 
-  });
+  };
+  // --
+  if(SESSION_SECURE) config.cookie.secure = true;
+  if(SESSION_DOMAIN) config.cookie.domain = SESSION_DOMAIN;
+  // --
+  var sessionMiddleware = express.session(config);
   // --
   app.use(function(req, res, next){
     // if user doesn't have cookies and request is for non-cookie items (i.e., javascript.map)
