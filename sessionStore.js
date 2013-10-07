@@ -21,6 +21,7 @@ module.exports = function(settings, app, express){
   var SESSION_SECRET    = settings.session_secret ||  "somethingSuperSecret"; 
   var SESSION_KEY       = settings.session_key    ||  "chaos_sid"; 
   var SESSION_DOMAIN    = settings.session_domain ||  ".example.com";
+  var SESSION_SECURE    = !!settings.session_secure;
   // --
   var MongoStore        = connectMongo(express);
   var sessionStore      = new MongoStore({
@@ -47,7 +48,7 @@ module.exports = function(settings, app, express){
       path     : '/',  // root path for the cookie
       httpOnly : true, // this includes https (just not browser code)
       maxAge   : 1000*60*60*24*100, //100 days between accesses
-      //secure   : true  
+      secure   : SESSION_SECURE 
       //domain   : ".chaoscollective.org" // allow subdomain (maybe userful later)
     } 
   });
