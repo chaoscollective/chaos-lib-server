@@ -9,7 +9,7 @@ module.exports = function(settings, app, express){
   if(!settings) return console.log(myname+"ERROR, no settings");
   if(!settings.session_secret) return console.log(myname+"ERROR, no settings.session_secret");
   if(!settings.session_key   ) return console.log(myname+"ERROR, no settings.session_key");
-  if(!settings.session_domain) return console.log(myname+"ERROR, no settings.session_domain");
+  //if(!settings.session_domain) return console.log(myname+"ERROR, no settings.session_domain");
   // -- 
   var MONGO_HOST        = settings.mongo_host     ||  "127.0.0.1";
   var MONGO_PORT        = settings.mongo_port     ||  27017;
@@ -20,7 +20,7 @@ module.exports = function(settings, app, express){
   // --
   var SESSION_SECRET    = settings.session_secret ||  "somethingSuperSecret"; 
   var SESSION_KEY       = settings.session_key    ||  "chaos_sid"; 
-  var SESSION_DOMAIN    = settings.session_domain ||  ".example.com";
+  var SESSION_DOMAIN    = settings.session_domain ||  false;
   var SESSION_SECURE    = !!settings.session_secure;
   // --
   var MongoStore        = connectMongo(express);
