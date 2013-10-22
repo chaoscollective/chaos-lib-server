@@ -28,7 +28,7 @@ module.exports = function(settings, app, express){
     db:         MONGO_DBNAME,
     collection: MONGO_COLLECTION,
     host:       MONGO_HOST,
-    post:       MONGO_PORT,
+    port:       MONGO_PORT,
     username:   MONGO_USER,
     password:   MONGO_PASS,
     auto_reconnect: true,
